@@ -9,7 +9,7 @@ busybox_version = "1.34.1"
 kernel_major = linux_kernel_version.split('.')[0]
 
 # Construct the URLs
-kernel_url = f"https://mirrors.edge.kernel.org/pub/linux/kernel/v{kernel_major}.x/linux-{linux_kernel_version}.tar.gz"
+kernel_url = f"https://mirrors.edge.kernel.org/pub/linux/kernel/v{kernel_major}.x/linux-{linux_kernel_version}.tar.xz"
 busybox_url = f"https://www.busybox.net/downloads/busybox-{busybox_version}.tar.bz2"
 
 # Create the src directory and the subdirectories for kernel and busybox
