@@ -29,6 +29,7 @@ def download_file(url, path):
         print(f"{local_filename} already exists. Skipping download.")
         return local_filename
     
+    print(f"Downloading {local_filename}")
     response = requests.get(url, stream=True)
     response.raise_for_status()
     
@@ -53,8 +54,12 @@ def extract_tarball(tarball_path):
     extract_path = os.path.dirname(tarball_path)
     if tarfile.is_tarfile(tarball_path):
         with tarfile.open(tarball_path, 'r:*') as tar:
-            tar.extractall(path=extract_path)
-        print(f"Extracted {tarball_path} to {extract_path}")
+            file_count = len(tar.getmembers())
+            with tqdm(total=file_count) as pbar:
+                for member in tar:
+                    tar.extract(member, path=extract_path)
+                    pbar.update(1)
+        print(f"Extracted {tarball_path}")
     else:
         raise Exception(f"ERROR: {tarball_path} is not a valid tar file")
 
@@ -70,6 +75,6 @@ print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
 print(f"BusyBox downloaded and extracted to: {busybox_dir}")
  
 # execute shell commands
-os.system('cd src/linux-1.14.6')
+os.system('cd src/linux-5.14.6')
 os.system('make defconfig')
 os.system('make -j8 || exit')
