@@ -24,7 +24,13 @@ This project aims to provide a minimalistic Linux implementation using **Rust Co
     cd wave-linux
     ```
 
-2. Run the setup script:
+2. Install Required tools ( Ubuntu's [Build Your Own Kernel](https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel) guide ):
+
+    ```sh
+    sudo apt-get install libncurses-dev flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf bc
+    ```
+
+3. Run the setup script:
 
     ```sh
     python main.py
