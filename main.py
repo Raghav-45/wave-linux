@@ -21,7 +21,7 @@ busybox_dir = os.path.join(src_dir, f"busybox-{busybox_version}")
 os.makedirs(kernel_dir, exist_ok=True)
 os.makedirs(busybox_dir, exist_ok=True)
 
-# Function to download a file from a URL with progress bar
+# Function to download a file from a URL with a progress bar
 def download_file(url, path):
     local_filename = os.path.join(path, url.split('/')[-1])
     if os.path.exists(local_filename):
@@ -42,7 +42,8 @@ def download_file(url, path):
     t.close()
     
     if total_size != 0 and t.n != total_size:
-        print("ERROR: Something went wrong with the download")
+        raise Exception("ERROR: Something went wrong with the download")
+    
     return local_filename
 
 # Download the Linux kernel and BusyBox tarballs
