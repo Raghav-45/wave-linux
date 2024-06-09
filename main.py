@@ -77,4 +77,4 @@ print(f"BusyBox downloaded and extracted to: {busybox_dir}")
 # execute shell commands
 os.system('cd src/linux-5.14.6')
 os.system('make -C src/linux-5.14.6 defconfig')
-os.system('make -C src/linux-5.14.6 -j8 || exit')
+# os.system('make -C src/linux-5.14.6 -j8 || exit')
