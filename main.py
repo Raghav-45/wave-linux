@@ -1,5 +1,6 @@
 import os
 import requests
+import tarfile
 from tqdm import tqdm
 
 # Define variables for the Linux kernel version and BusyBox version
@@ -23,7 +24,7 @@ os.makedirs(busybox_dir, exist_ok=True)
 
 # Function to download a file from a URL with a progress bar
 def download_file(url, path):
-    local_filename = os.path.join(path, url.split('/')[-1])
+    local_filename = os.path.join(path, os.path.basename(url))
     if os.path.exists(local_filename):
         print(f"{local_filename} already exists. Skipping download.")
         return local_filename
@@ -46,9 +47,23 @@ def download_file(url, path):
     
     return local_filename
 
-# Download the Linux kernel and BusyBox tarballs
-kernel_tarball = download_file(kernel_url, kernel_dir)
-busybox_tarball = download_file(busybox_url, busybox_dir)
+# Function to extract a tarball
+def extract_tarball(tarball_path):
+    extract_path = os.path.dirname(tarball_path)
+    if tarfile.is_tarfile(tarball_path):
+        with tarfile.open(tarball_path, 'r:*') as tar:
+            tar.extractall(path=extract_path)
+        print(f"Extracted {tarball_path} to {extract_path}")
+    else:
+        raise Exception(f"ERROR: {tarball_path} is not a valid tar file")
 
-print(f"Linux Kernel downloaded to: {kernel_tarball}")
-print(f"BusyBox downloaded to: {busybox_tarball}")
+# Download the Linux kernel and BusyBox tarballs
+kernel_tarball = download_file(kernel_url, src_dir)
+busybox_tarball = download_file(busybox_url, src_dir)
+
+# Extract the downloaded tarballs
+extract_tarball(kernel_tarball)
+extract_tarball(busybox_tarball)
+
+print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
+print(f"BusyBox downloaded and extracted to: {busybox_dir}")
