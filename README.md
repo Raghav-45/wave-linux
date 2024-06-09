@@ -1,5 +1,4 @@
 # Wave Linux
-#### ( Minimal Linux Implementation )
 
 This project provides a minimal Linux implementation using `Rust Coreutils` and the `Linux Kernel`. The setup script downloads the specified Linux Kernel and BusyBox, extracts them into designated directories, and prepares them for further development or usage.
 
