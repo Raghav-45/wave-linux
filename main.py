@@ -1,5 +1,6 @@
 import os
 import requests
+from tqdm import tqdm
 
 # Define variables for the Linux kernel version and BusyBox version
 linux_kernel_version = "5.14.6"
@@ -20,14 +21,28 @@ busybox_dir = os.path.join(src_dir, f"busybox-{busybox_version}")
 os.makedirs(kernel_dir, exist_ok=True)
 os.makedirs(busybox_dir, exist_ok=True)
 
-# Function to download a file from a URL
+# Function to download a file from a URL with progress bar
 def download_file(url, path):
     local_filename = os.path.join(path, url.split('/')[-1])
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
+    if os.path.exists(local_filename):
+        print(f"{local_filename} already exists. Skipping download.")
+        return local_filename
+    
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+    
+    total_size = int(response.headers.get('content-length', 0))
+    block_size = 8192  # 8KB
+    t = tqdm(total=total_size, unit='iB', unit_scale=True)
+    
+    with open(local_filename, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=block_size):
+            t.update(len(chunk))
+            f.write(chunk)
+    t.close()
+    
+    if total_size != 0 and t.n != total_size:
+        print("ERROR: Something went wrong with the download")
     return local_filename
 
 # Download the Linux kernel and BusyBox tarballs
