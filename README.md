@@ -21,7 +21,7 @@ This project aims to provide a minimalistic Linux implementation using **Rust Co
 
     ```sh
     git clone https://github.com/raghav-45/wave-linux.git
-    cd minimal-linux-implementation
+    cd wave-linux
     ```
 
 2. Run the setup script:
