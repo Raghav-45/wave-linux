@@ -20,7 +20,7 @@ This project aims to provide a minimalistic Linux implementation using **Rust Co
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/raghav-45/minimal-linux-implementation.git
+    git clone https://github.com/raghav-45/wave-linux.git
     cd minimal-linux-implementation
     ```
 
