@@ -45,6 +45,7 @@ def download_file(url, path):
     if total_size != 0 and t.n != total_size:
         raise Exception("ERROR: Something went wrong with the download")
     
+    extract_tarball(local_filename)
     return local_filename
 
 # Function to extract a tarball
@@ -61,9 +62,14 @@ def extract_tarball(tarball_path):
 kernel_tarball = download_file(kernel_url, src_dir)
 busybox_tarball = download_file(busybox_url, src_dir)
 
-# Extract the downloaded tarballs
-extract_tarball(kernel_tarball)
-extract_tarball(busybox_tarball)
+# # Extract the downloaded tarballs
+# extract_tarball(kernel_tarball)
+# extract_tarball(busybox_tarball)
 
 print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
 print(f"BusyBox downloaded and extracted to: {busybox_dir}")
+ 
+# execute shell commands
+os.system('cd src/linux-1.14.6')
+os.system('make defconfig')
+os.system('make -j8 || exit')
