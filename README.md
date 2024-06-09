@@ -27,5 +27,5 @@ This project aims to provide a minimalistic Linux implementation using **Rust Co
 2. Run the setup script:
 
     ```sh
-    python setup.py
+    python main.py
     ```
