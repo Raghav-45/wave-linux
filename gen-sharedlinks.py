@@ -14,4 +14,10 @@ def create_symlinks(commands):
         print(f"Created symlink for {cmd}")
 
 commands = get_coreutils_commands()
-create_symlinks(commands)
+# print(commands)
+
+formatted_commands = ["-p uu_" + command for command in commands]
+result = ' '.join(formatted_commands)
+print(result)
+
+# create_symlinks(commands)
