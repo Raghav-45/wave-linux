@@ -10,6 +10,7 @@ def create_symlinks(commands):
     for cmd in commands:
         symlink_path = os.path.join(binary_dir, cmd)
         os.system(f"ln -s ./{binary_dir}/coreutils ./{symlink_path}")
+        # os.system(f"rm -rf ./{symlink_path}")
         print(f"Created symlink for {cmd}")
 
 commands = get_coreutils_commands()
