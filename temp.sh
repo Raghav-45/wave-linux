@@ -2,7 +2,7 @@
 
 # for cmd in $(./busybox --list); do
 # l# ln -s ./bin/busybox ./$cmd
-ne
+
 
 
 # mkdir initrd
