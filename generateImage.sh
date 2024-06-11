@@ -1,11 +1,3 @@
-# cd initrd/bin
-
-# for cmd in $(./busybox --list); do
-# l# ln -s ./bin/busybox ./$cmd
-
-
-
-# mkdir initrd
 cd initrd
 
 echo '#!/bin/sh' > init
