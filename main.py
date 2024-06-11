@@ -1,4 +1,4 @@
-import os
+import os, shutil
 import requests
 import tarfile
 from tqdm import tqdm
@@ -19,8 +19,12 @@ src_dir = "src"
 kernel_dir = os.path.join(src_dir, f"linux-{linux_kernel_version}")
 busybox_dir = os.path.join(src_dir, f"busybox-{busybox_version}")
 
+workspace_dir = ["workspace", "workspace/bin", "workspace/sbin"]
+
 os.makedirs(kernel_dir, exist_ok=True)
 os.makedirs(busybox_dir, exist_ok=True)
+
+for dir in workspace_dir: os.makedirs(dir, exist_ok=True)
 
 # Function to download a file from a URL with a progress bar
 def download_file(url, path):
@@ -63,18 +67,35 @@ def extract_tarball(tarball_path):
     else:
         raise Exception(f"ERROR: {tarball_path} is not a valid tar file")
 
+
+def build_kernel():
+    # execute build commands only if the bzImage does not exist
+    if not os.path.exists(f"{kernel_dir}/arch/x86/boot/bzImage"):
+        os.system(f"make -C {kernel_dir} defconfig")
+        os.system(f"make -C {kernel_dir} -j8")
+
+
+def build_busybox():
+    # execute build commands
+    if not os.path.exists(f"{busybox_dir}/busybox"):
+        os.system(f"make -C {busybox_dir} defconfig")
+        os.system(f"sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i {busybox_dir}/.config")
+        os.system(f"make CC=musl-gcc -C {busybox_dir} -j8 busybox")
+
+
 # Download the Linux kernel and BusyBox tarballs
 kernel_tarball = download_file(kernel_url, src_dir)
 busybox_tarball = download_file(busybox_url, src_dir)
 
-# # Extract the downloaded tarballs
-# extract_tarball(kernel_tarball)
-# extract_tarball(busybox_tarball)
-
 print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
 print(f"BusyBox downloaded and extracted to: {busybox_dir}")
- 
-# execute shell commands
-os.system('cd src/linux-5.14.6')
-os.system('make -C src/linux-5.14.6 defconfig')
-os.system('make -C src/linux-5.14.6 -j8')
+
+# build_kernel()
+# build_busybox()
+# print(f"{busybox_dir}/.config")
+
+def directory_structure():
+    shutil.copyfile(f"{busybox_dir}/busybox", f"{workspace_dir[0]}/bin/busybox")
+
+
+directory_structure()
