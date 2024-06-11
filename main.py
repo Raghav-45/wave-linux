@@ -19,14 +19,13 @@ src_dir = "src"
 kernel_dir = os.path.join(src_dir, f"linux-{linux_kernel_version}")
 busybox_dir = os.path.join(src_dir, f"busybox-{busybox_version}")
 
-workspace_dir = ["workspace", "workspace/bin", "workspace/sbin", "workspace/dev", "workspace/proc", "workspace/sys"]
+workspace_dir = ["initrd", "initrd/bin", "initrd/sbin", "initrd/dev", "initrd/proc", "initrd/sys"]
 
 os.makedirs(kernel_dir, exist_ok=True)
 os.makedirs(busybox_dir, exist_ok=True)
 
 for dir in workspace_dir: os.makedirs(dir, exist_ok=True)
 
-# Function to download a file from a URL with a progress bar
 def download_file(url, path):
     local_filename = os.path.join(path, os.path.basename(url))
     if os.path.exists(local_filename):
@@ -53,7 +52,7 @@ def download_file(url, path):
     extract_tarball(local_filename)
     return local_filename
 
-# Function to extract a tarball
+
 def extract_tarball(tarball_path):
     extract_path = os.path.dirname(tarball_path)
     if tarfile.is_tarfile(tarball_path):
@@ -83,20 +82,30 @@ def build_busybox():
         os.system(f"make CC=musl-gcc -C {busybox_dir} -j8 busybox")
 
 
-# Download the Linux kernel and BusyBox tarballs
 kernel_tarball = download_file(kernel_url, src_dir)
-busybox_tarball = download_file(busybox_url, src_dir)
+print(f"\nLinux Kernel downloaded and extracted to: {kernel_dir}")
 
-print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
-print(f"BusyBox downloaded and extracted to: {busybox_dir}")
+busybox_tarball = download_file(busybox_url, src_dir)
+print(f"\nBusyBox downloaded and extracted to: {busybox_dir}")
 
 # build_kernel()
 # build_busybox()
 # print(f"{busybox_dir}/.config")
 
 def directory_structure():
-    shutil.copyfile(f"{busybox_dir}/busybox", f"{workspace_dir[0]}/bin/busybox")
-    # shutil.copyfile(f"{kernel_dir}/arch/x86/boot/bzImage", f"{workspace_dir[0]}/bzImage")
+    # shutil.copyfile(f"{busybox_dir}/busybox", f"{workspace_dir[0]}/bin/busybox")
+    # shutil.copyfile(f"{kernel_dir}/arch/x86/boot/bzImage", f"./bzImage")
+    
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo '#!/bin/sh' > init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t sysfs sysfs /sys' >> init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t proc proc /proc' >> init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t devtmpfs udev /dev' >> init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'sysctl -w kernel.printk=\"2 4 1 7\"' >> init")
+    # os.system(f"./{workspace_dir[0]}/bin/busybox echo 'clear' >> init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo '/bin/sh' >> init")
+
+    # os.system(f"./{workspace_dir[0]}/bin/busybox chmod -R 777 ./{workspace_dir[0]}")
+    os.system(f"./{workspace_dir[0]}/bin/busybox find ./{workspace_dir[0]}/ | cpio -o -H newc > ./initrd.img")
 
 
 directory_structure()
