@@ -10,8 +10,10 @@ def create_symlinks(commands):
     for cmd in commands:
         symlink_path = os.path.join(binary_dir, cmd)
         os.system(f"rm -rf ./{symlink_path}")
-        os.system(f"ln -s /bin/busybox ./{symlink_path}") # relative path for that link (./busybox)
+        # os.system(f"ln -s ./busybox ./{symlink_path}") # relative path for that link (./busybox)
         print(f"Created symlink for {cmd}")
+
+    os.system(f"for cmd in $(./initrd/bin/busybox --list); do ln -s ./busybox ./{binary_dir}/$cmd; done")  # IDK why but this works
 
 commands = get_coreutils_commands()
 # print(commands)
