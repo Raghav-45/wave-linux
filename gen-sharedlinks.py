@@ -9,8 +9,8 @@ def create_symlinks(commands):
     binary_dir = "initrd/bin"
     for cmd in commands:
         symlink_path = os.path.join(binary_dir, cmd)
-        # os.system(f"ln -s ./{binary_dir}/busybox ./{symlink_path}")
-        os.system(f"rm -rf ./{symlink_path}")
+        os.system(f"ln -s ./{binary_dir}/busybox ./{symlink_path}")
+        # os.system(f"rm -rf ./{symlink_path}")
         print(f"Created symlink for {cmd}")
 
 commands = get_coreutils_commands()
