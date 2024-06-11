@@ -19,7 +19,7 @@ src_dir = "src"
 kernel_dir = os.path.join(src_dir, f"linux-{linux_kernel_version}")
 busybox_dir = os.path.join(src_dir, f"busybox-{busybox_version}")
 
-workspace_dir = ["workspace", "workspace/bin", "workspace/sbin"]
+workspace_dir = ["workspace", "workspace/bin", "workspace/sbin", "workspace/dev", "workspace/proc", "workspace/sys"]
 
 os.makedirs(kernel_dir, exist_ok=True)
 os.makedirs(busybox_dir, exist_ok=True)
@@ -96,6 +96,7 @@ print(f"BusyBox downloaded and extracted to: {busybox_dir}")
 
 def directory_structure():
     shutil.copyfile(f"{busybox_dir}/busybox", f"{workspace_dir[0]}/bin/busybox")
+    # shutil.copyfile(f"{kernel_dir}/arch/x86/boot/bzImage", f"{workspace_dir[0]}/bzImage")
 
 
 directory_structure()
