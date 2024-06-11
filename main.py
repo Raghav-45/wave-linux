@@ -87,22 +87,3 @@ busybox_tarball = download_file(busybox_url, src_dir)
 
 build_kernel()
 # build_busybox()
-
-def directory_structure():
-    # shutil.copyfile(f"{busybox_dir}/busybox", f"{workspace_dir[0]}/bin/busybox")
-    shutil.copyfile(f"{kernel_dir}/arch/x86/boot/bzImage", f"./bzImage")
-    
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo '#!/bin/sh' > ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t sysfs sysfs /sys' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t proc proc /proc' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'mount -t devtmpfs udev /dev' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'sysctl -w kernel.printk=\"2 4 1 7\"' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'clear' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo '/bin/sh' >> ./{workspace_dir[0]}/init")
-    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'poweroff -f' >> ./{workspace_dir[0]}/init")
-
-    os.system(f"./{workspace_dir[0]}/bin/busybox chmod -R 777 ./{workspace_dir[0]}")
-    os.system(f"./{workspace_dir[0]}/bin/busybox find ./{workspace_dir[0]}/ | cpio -o -H newc > ./initrd.img")
-
-
-directory_structure()
