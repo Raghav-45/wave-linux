@@ -13,7 +13,7 @@ def create_symlinks(commands):
         # os.system(f"ln -s ./busybox ./{symlink_path}") # relative path for that link (./busybox)
         print(f"Created symlink for {cmd}")
 
-    os.system(f"for cmd in $(./initrd/bin/busybox --list); do ln -s ./busybox ./{binary_dir}/$cmd; done")  # IDK why but this works
+    os.system(f"for cmd in $(./busybox --list); do ln -s /bin/busybox ./{binary_dir}/$cmd; done")  # IDK why but this works but run this inside initrd/bin directory manually
 
 commands = get_coreutils_commands()
 # print(commands)

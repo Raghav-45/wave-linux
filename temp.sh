@@ -1,8 +1,8 @@
 # cd initrd/bin
 
 # for cmd in $(./busybox --list); do
-# ln -s ./bin/busybox ./$cmd
-# done
+# l# ln -s ./bin/busybox ./$cmd
+ne
 
 
 # mkdir initrd
