@@ -29,7 +29,7 @@ for dir in workspace_dir: os.makedirs(dir, exist_ok=True)
 def download_file(url, path):
     local_filename = os.path.join(path, os.path.basename(url))
     if os.path.exists(local_filename):
-        print(f"{local_filename} already exists. Skipping download.")
+        print(f"{local_filename} already exists. Skipping download.\n")
         return local_filename
     
     print(f"Downloading {local_filename}")
@@ -47,7 +47,7 @@ def download_file(url, path):
     t.close()
     
     if total_size != 0 and t.n != total_size:
-        raise Exception("ERROR: Something went wrong with the download")
+        raise Exception("ERROR: Something went wrong with the download\n")
     
     extract_tarball(local_filename)
     return local_filename
@@ -83,10 +83,10 @@ def build_busybox():
 
 
 kernel_tarball = download_file(kernel_url, src_dir)
-print(f"\nLinux Kernel downloaded and extracted to: {kernel_dir}")
+print(f"Linux Kernel downloaded and extracted to: {kernel_dir}")
 
 busybox_tarball = download_file(busybox_url, src_dir)
-print(f"\nBusyBox downloaded and extracted to: {busybox_dir}")
+print(f"BusyBox downloaded and extracted to: {busybox_dir}")
 
 # build_kernel()
 # build_busybox()
@@ -103,6 +103,7 @@ def directory_structure():
     os.system(f"./{workspace_dir[0]}/bin/busybox echo 'sysctl -w kernel.printk=\"2 4 1 7\"' >> init")
     # os.system(f"./{workspace_dir[0]}/bin/busybox echo 'clear' >> init")
     os.system(f"./{workspace_dir[0]}/bin/busybox echo '/bin/sh' >> init")
+    os.system(f"./{workspace_dir[0]}/bin/busybox echo 'poweroff -f' >> init")
 
     # os.system(f"./{workspace_dir[0]}/bin/busybox chmod -R 777 ./{workspace_dir[0]}")
     os.system(f"./{workspace_dir[0]}/bin/busybox find ./{workspace_dir[0]}/ | cpio -o -H newc > ./initrd.img")
