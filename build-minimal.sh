@@ -16,7 +16,7 @@ BUSYBOX_DIR="${SRC_DIR}/busybox-${BUSYBOX_VERSION}"
 KERNEL_URL="https://mirrors.edge.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/linux-${LINUX_KERNEL_VERSION}.tar.xz"
 BUSYBOX_URL="https://www.busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2"
 
-WORKSPACE_DIRS=("initrd" "initrd/bin" "initrd/sbin" "initrd/dev" "initrd/proc" "initrd/sys")
+WORKSPACE_DIRS=("initrd" "initrd/bin" "initrd/sbin" "initrd/dev" "initrd/dev/pts" "initrd/tmp" "initrd/proc" "initrd/sys")
 
 mkdir -p $SRC_DIR
 cd $SRC_DIR
@@ -56,9 +56,13 @@ cd initrd
 
     ########## GENERATE INIT FILE ##########
     echo '#!/bin/sh' > init
+
     echo 'mount -t sysfs sysfs /sys' >> init
     echo 'mount -t proc proc /proc' >> init
+    echo 'mount -t tmpfs none /tmp -o mode=1777' >> init
     echo 'mount -t devtmpfs udev /dev' >> init
+    echo 'mount -t devpts none /dev/pts' >> init
+
     echo 'sysctl -w kernel.printk="2 4 1 7"' >> init
     echo 'clear' >> init
     echo 'echo -e "Welcome to \\e[34mWave \\e[32mLinux \\e[31mLive\\e[0m (/init)"' >> init
