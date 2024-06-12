@@ -1,3 +1,4 @@
 /src
 /initrd/bin/*
 !/initrd/bin/busybox
+!/initrd/sbin/coreutils
