@@ -32,6 +32,7 @@ cd $SRC_DIR
     cd busybox-$BUSYBOX_VERSION
         make defconfig
         sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
+        # sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config  # this also works
         make CC=musl-gcc -j$(nproc) busybox
     cd ..
 cd ..
