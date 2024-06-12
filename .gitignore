@@ -2,3 +2,4 @@
 /initrd/bin/*
 !/initrd/bin/busybox
 !/initrd/sbin/coreutils
+initrd.img
