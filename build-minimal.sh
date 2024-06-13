@@ -17,6 +17,7 @@ KERNEL_URL="https://mirrors.edge.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/
 BUSYBOX_URL="https://www.busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2"
 
 WORKSPACE_DIRS=("initrd" "initrd/bin" "initrd/sbin" "initrd/dev" "initrd/dev/pts" "initrd/tmp" "initrd/proc" "initrd/sys")
+mkdir initrd
 
 mkdir -p $SRC_DIR
 cd $SRC_DIR
@@ -27,13 +28,22 @@ cd $SRC_DIR
         make -j$(nproc) || exit
     cd ..
 
+    # wget $BUSYBOX_URL
+    # tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
+    # cd busybox-$BUSYBOX_VERSION
+    #     make defconfig
+    #     sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
+    #     # sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config  # this also works
+    #     make CC=musl-gcc -j$(nproc) busybox
+    # cd ..
+    
     wget $BUSYBOX_URL
     tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
     cd busybox-$BUSYBOX_VERSION
         make defconfig
-        sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
-        # sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config  # this also works
-        make CC=musl-gcc -j$(nproc) busybox
+        sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config
+        make -j$(nproc)
+        make CONFIG_PREFIX=../../initrd -j$(nproc) install
     cd ..
 cd ..
 
@@ -43,16 +53,15 @@ cp $KERNEL_DIR/arch/x86/boot/bzImage ./
 #     mkdir -p $DIR
 # done
 
-mkdir initrd
 cd initrd
     mkdir -p bin sbin dev proc sys
-    cd bin
-        cd ../../$BUSYBOX_DIR/busybox ./
+    # cd bin
+    #     cd ../../$BUSYBOX_DIR/busybox ./
 
-        for cmd in $(./busybox --list); do
-            ln -s /bin/busybox ./$cmd;
-        done
-    cd ..
+    #     for cmd in $(./busybox --list); do
+    #         ln -s /bin/busybox ./$cmd;
+    #     done
+    # cd ..
 
     ########## GENERATE INIT FILE ##########
     echo '#!/bin/sh' > init
