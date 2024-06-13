@@ -16,17 +16,19 @@ BUSYBOX_DIR="${SRC_DIR}/busybox-${BUSYBOX_VERSION}"
 KERNEL_URL="https://mirrors.edge.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/linux-${LINUX_KERNEL_VERSION}.tar.xz"
 BUSYBOX_URL="https://www.busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2"
 
-WORKSPACE_DIRS=("initrd" "initrd/bin" "initrd/sbin" "initrd/dev" "initrd/dev/pts" "initrd/tmp" "initrd/proc" "initrd/sys")
+WORKSPACE_DIRS=("initrd/bin" "initrd/sbin" "initrd/dev" "initrd/dev/pts" "initrd/tmp" "initrd/proc" "initrd/sys")
 mkdir initrd
 
 mkdir -p $SRC_DIR
 cd $SRC_DIR
-    wget $KERNEL_URL
-    tar -xf linux-$LINUX_KERNEL_VERSION.tar.xz
-    cd linux-$LINUX_KERNEL_VERSION
-        make defconfig
-        make -j$(nproc) || exit
-    cd ..
+    if [ ! -d "linux-$LINUX_KERNEL_VERSION" ]; then  #linux-$LINUX_KERNEL_VERSION does not exists
+        wget $KERNEL_URL
+        tar -xf linux-$LINUX_KERNEL_VERSION.tar.xz
+        cd linux-$LINUX_KERNEL_VERSION
+            make defconfig
+            make -j$(nproc) || exit
+        cd ..
+    fi
 
     # wget $BUSYBOX_URL
     # tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
@@ -37,24 +39,25 @@ cd $SRC_DIR
     #     make CC=musl-gcc -j$(nproc) busybox
     # cd ..
     
-    wget $BUSYBOX_URL
-    tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
-    cd busybox-$BUSYBOX_VERSION
-        make defconfig
-        sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config
-        make -j$(nproc)
-        make CONFIG_PREFIX=../../initrd -j$(nproc) install
-    cd ..
+    if [ ! -d "busybox-$BUSYBOX_VERSION" ]; then  #busybox-$BUSYBOX_VERSION does not exists
+        wget $BUSYBOX_URL
+        tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
+        cd busybox-$BUSYBOX_VERSION
+            make defconfig
+            sed -i "s|.*CONFIG_STATIC.*|CONFIG_STATIC=y|" .config
+            make -j$(nproc)
+            make CONFIG_PREFIX=../../initrd -j$(nproc) install
+        cd ..
+    fi
 cd ..
 
 cp $KERNEL_DIR/arch/x86/boot/bzImage ./
 
-# for DIR in "${WORKSPACE_DIRS[@]}"; do
-#     mkdir -p $DIR
-# done
+for DIR in "${WORKSPACE_DIRS[@]}"; do
+    mkdir -p $DIR
+done
 
 cd initrd
-    mkdir -p bin sbin dev proc sys
     # cd bin
     #     cd ../../$BUSYBOX_DIR/busybox ./
 
