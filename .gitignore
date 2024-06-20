@@ -1,7 +1,11 @@
 /src
+!/.config
+
 /initrd/bin/*
 !/initrd/bin/busybox
+
 /initrd/sbin
 !/initrd/sbin/coreutils
+
 initrd.img
 /initrd/usr
