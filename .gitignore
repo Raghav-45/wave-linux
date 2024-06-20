@@ -1,5 +1,5 @@
 /src
-!/src/.config
+!src/.config
 
 /initrd/bin/*
 !/initrd/bin/busybox
