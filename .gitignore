@@ -1,5 +1,8 @@
-src/source
-src/work
+/src/source/**
+/src/work/**
+/src/minimal_linux_live*
+/src/*.img
+/src/*.tgz
 
 /initrd/bin/*
 !/initrd/bin/busybox
