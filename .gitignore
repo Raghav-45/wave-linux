@@ -1,3 +1,5 @@
+src/common_modified.sh
+
 /initrd/bin/*
 !/initrd/bin/busybox
 
