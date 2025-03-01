@@ -7,7 +7,7 @@ This project provides a minimal Linux implementation using `Rust Coreutils` and 
 
 ## Description 📝
 
-By leveraging the power and efficiency of Rust, along with Linux kernel, I've creating a lightweight linux.
+By leveraging the power and efficiency of Rust, along with Linux kernel, I've created a lightweight linux.
 
 ## Features ( Currently ) ✨
 
